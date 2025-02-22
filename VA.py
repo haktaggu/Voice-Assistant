@@ -12,6 +12,9 @@ import pyaudio as pa
 import os
 from dotenv import load_dotenv, dotenv_values
 from google import genai
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 # GUI Frame
     #Using Tkinter
@@ -30,6 +33,8 @@ if not GEMINI_KEY:
     print("Error: Trouble accessing .env file!")
     raise Exception
 client = genai.Client(api_key=GEMINI_KEY)
+
+#Browser Setup (Firefox)
 
 def listen():
     with sr.Microphone() as source:
@@ -51,12 +56,22 @@ def listen():
 
         lowerCaseUserSpeech = userSpeech.lower()
 
-        if(lowerCaseUserSpeech[0:14])=="ask gemini for": 
-            _,_, geminiInput = userSpeech.partition("ask gemini for ")
-            print(geminiInput)
-            response = client.models.generate_content(
-                 model="gemini-2.0-flash", contents=geminiInput
-            )
+        #if(lowerCaseUserSpeech[0:14])=="ask gemini": 
+            #_,_, geminiInput = userSpeech.partition("ask gemini")
+            #print(geminiInput)
+            #response = client.models.generate_content(
+            #     model="gemini-2.0-flash", contents=geminiInput
+            #)
+        
+
+        if(lowerCaseUserSpeech[0:19] == "search internet for"):
+            _,_, browserInput = userSpeech.partition("search internet for")
+            print(browserInput)
+            browser = webdriver.Firefox()
+            browser.get("https://google.com")
+            assert "Google" in browser.title
+            searchBox = browser.find_element(By.NAME, 'q') 
+            searchBox.send_keys(browserInput + Keys.RETURN)
         
 
     
