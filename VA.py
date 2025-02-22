@@ -10,6 +10,7 @@ from tkinter import ttk
 import speech_recognition as sr
 import pyaudio as pa
 import os
+import pyttsx3 
 from dotenv import load_dotenv, dotenv_values
 from google import genai
 from selenium import webdriver
@@ -20,6 +21,9 @@ from selenium.webdriver.common.keys import Keys
     #Using Tkinter
 root = Tk()
 frm = ttk.Frame(root, padding = 20)
+root.title("My Voice Assistant")
+root.configure(bg="grey")
+root.geometry(f"372x124")
 frm.grid()
 
 # Speech Recognition Functions
@@ -34,7 +38,17 @@ if not GEMINI_KEY:
     raise Exception
 client = genai.Client(api_key=GEMINI_KEY)
 
-#Browser Setup (Firefox)
+#TexttoSpeech Set Up
+
+speechEngine = pyttsx3.init()
+
+def textToSpeech(phrase):
+    speechEngine.say(phrase)
+    speechEngine.runAndWait()
+
+greetingPhrase = "Hello! I am your personal Voice Assistant. Click Speak to get started"
+
+textToSpeech(greetingPhrase)
 
 def listen():
     with sr.Microphone() as source:
