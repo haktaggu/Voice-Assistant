@@ -102,6 +102,12 @@ def rick_roll():
         browser_report_label = Label(root, text=status_for_user)
         browser_report_label.grid()
 
+def help():
+    features = "I can do a lot of things!\n Click Speak and I will listen to your request.\nSay Google and I will open a browser tab for you searching\n for whatever you said after google. Say Youtube \nand I will open youtube for you and search for whatever you said \nafter youtube. Say Gmail and I will open Gmail \nfor you in your browser. Say \nGemini and Gemini will respond to your \nrequest. Furthermore, you can click the\n Draw feature to open a blackboard to take notes."
+    textToSpeech(features)
+    features_label = Label(root, text=features)
+    features_label.grid()
+
 def generate_response(prompt):
 
     response = client.models.generate_content(
@@ -134,11 +140,13 @@ def listen():
         
         except sr.UnknownValueError:
             recognized_phrase = None
-            print("I didn't understand that. Please try again?")
+            incomprehens_report = "I didn't understand that. Please try again?"
+            textToSpeech(incomprehens_report)
             
         except sr.RequestError as e:
             recognized_phrase = None
-            print("Google Connection Error")
+            google_error_report = "Google Connection Error"
+            textToSpeech(google_error_report)
     
     return recognized_phrase
 
@@ -189,7 +197,7 @@ def main():
         command_length = len(command)
         if(lowerCaseUserSpeech[0:command_length])==command: 
             input = lowerCaseUserSpeech[command_length+1:]
-            response = generate_response(input)
+            response = generate_response(input + ". Keep your response 3-5 sentences long. Start a new line after 65 characters. Do not use fluff, Do not use asteriks, and put as much information as you can.")
             print(response)
             create_label(response)
             textToSpeech(response)
@@ -215,6 +223,11 @@ def main():
         
         if(lowerCaseUserSpeech == "rickroll" or lowerCaseUserSpeech == "rick roll"):
             rick_roll()
+        
+        if(lowerCaseUserSpeech == "help"):
+            help()
+
+        
   
 #GUI Buttons
     # Speak Button (used for Speech to Text)
@@ -222,7 +235,9 @@ def main():
     # Exit Button (Terminates Program)
 ttk.Button(frm, text = "Speak", command = main).grid(column=0, row=0)
 ttk.Button(frm, text = "Draw", command = drawing_app).grid(column=0, row=1)
-ttk.Button(frm, text = "Exit", command = root.destroy).grid(column=0, row=2)
+ttk.Button(frm, text = "Help", command = help).grid(column=0, row=2)
+ttk.Button(frm, text = "Exit", command = root.destroy).grid(column=0, row=3)
+
 
 
 root.mainloop()
