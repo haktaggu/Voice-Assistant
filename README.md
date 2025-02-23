@@ -1,7 +1,7 @@
 # Voice-Assistant
 Ohlone Hackathon 5.0 Project 
 
-This submittion is for 'education' categroy, so it is focused on study.
+This submission is for 'education' category, so it is focused on study.
 
 This Voice Assistant:
 - Has a GUI with 4 Buttons - Speak, Draw, Help, Exit
