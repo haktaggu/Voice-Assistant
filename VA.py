@@ -4,7 +4,7 @@
         # Tkinter Package (used for GUI)
         # Speech Recognition Package (used for Speech Recognition)
         # PyAudio Package (Used for Audio)
-        
+        #...
 from tkinter import *
 from tkinter import ttk
 import pygame
@@ -50,16 +50,18 @@ client = genai.Client(api_key=GEMINI_KEY)
 
 speech_engine = pyttsx3.init()
 
+#Text to Speech Function
 def textToSpeech(phrase):
     speech_engine.say(phrase)
     speech_engine.runAndWait()
 
+#Greeting
 greeting_phrase = "Hello! I am your personal Voice Assistant. Click Speak to get started"
 greeting_label = Label(root, text="Hello! I am your personal Voice Assistant. Click Speak to get started!")
 greeting_label.grid() 
-
 textToSpeech(greeting_phrase)
 
+#Open Google Function
 def open_browser(browserInput):
         browser = webdriver.Firefox()
         browser.get("https://google.com")
@@ -71,7 +73,19 @@ def open_browser(browserInput):
         browser_report_label = Label(root, text=status_for_user)
         browser_report_label.grid()
 
+#Open DuckDuckGo (privacy) Function
+def open_browser_privacy(browserInput):
+        browser = webdriver.Firefox()
+        browser.get("https://start.duckduckgo.com/")
+        assert "DuckDuckGo" in browser.title
+        searchBox = browser.find_element(By.NAME, 'q') 
+        searchBox.send_keys(browserInput + Keys.RETURN)
+        status_for_user = "Searched DuckDuckGo for " + browserInput
+        textToSpeech(status_for_user)
+        browser_report_label = Label(root, text=status_for_user)
+        browser_report_label.grid()
 
+#Open Youtube Function
 def open_youtube(browserInput):
         browser = webdriver.Firefox()
         browser.get("https://youtube.com")
@@ -83,6 +97,7 @@ def open_youtube(browserInput):
         browser_report_label = Label(root, text=status_for_user)
         browser_report_label.grid()
 
+#Open Gmail Function
 def open_gmail(browserInput):
         browser = webdriver.Firefox()
         browser.get("https://gmail.com")
@@ -94,6 +109,7 @@ def open_gmail(browserInput):
         #searchBox = browser.find_element(By.NAME, 'search_query') 
         #searchBox.send_keys(browserInput + Keys.RETURN)
 
+#Rick Roll Function - Joke
 def rick_roll():
         browser = webdriver.Firefox()
         browser.get("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
@@ -102,12 +118,14 @@ def rick_roll():
         browser_report_label = Label(root, text=status_for_user)
         browser_report_label.grid()
 
+#Help Function
 def help():
     features = "I can do a lot of things!\n Click Speak and I will listen to your request.\nSay Google and I will open a browser tab for you searching\n for whatever you said after google. Say Youtube \nand I will open youtube for you and search for whatever you said \nafter youtube. Say Gmail and I will open Gmail \nfor you in your browser. Say \nGemini and Gemini will respond to your \nrequest. Furthermore, you can click the\n Draw feature to open a blackboard to take notes."
     textToSpeech(features)
     features_label = Label(root, text=features)
     features_label.grid()
 
+#Gemini Response Function
 def generate_response(prompt):
 
     response = client.models.generate_content(
@@ -116,11 +134,12 @@ def generate_response(prompt):
     
     return response.text
 
+#Label Function
 def create_label(txt):
      label = Label(root, text=txt)
      label.grid()
      
-
+#Listen Function (uses microphone and saves string)
 def listen():
     recognized_phrase = None
     with sr.Microphone() as source:
@@ -150,6 +169,7 @@ def listen():
     
     return recognized_phrase
 
+#Drawing App Function
 def drawing_app():
     pygame.init()
 
@@ -182,6 +202,7 @@ def drawing_app():
         pygame.display.update()
     pygame.quit()
 
+#Main Function 
 def main():
         
         phrase = listen()
@@ -193,14 +214,14 @@ def main():
         #lowerCaseUserSpeech = listen().lower()
         #print(lowerCaseUserSpeech)
 
-        command = "gemini"
-        command_length = len(command)
-        if(lowerCaseUserSpeech[0:command_length])==command: 
-            input = lowerCaseUserSpeech[command_length+1:]
-            response = generate_response(input + ". Keep your response 3-5 sentences long. Start a new line after 65 characters. Do not use fluff, Do not use asteriks, and put as much information as you can.")
-            print(response)
-            create_label(response)
-            textToSpeech(response)
+        #command = "gemini"
+        #command_length = len(command)
+        #if(lowerCaseUserSpeech[0:command_length])==command: 
+            #input = lowerCaseUserSpeech[command_length+1:]
+            #response = generate_response(input + ". Keep your response 3-5 sentences long. Start a new line after 65 characters. Do not use fluff, Do not use asteriks, and put as much information as you can.")
+            #print(response)
+            #create_label(response)
+            #textToSpeech(response)
 
 
         command = "google"
@@ -208,30 +229,48 @@ def main():
         if(lowerCaseUserSpeech[0:command_length])==command: 
             input = lowerCaseUserSpeech[command_length+1:]
             open_browser(input)
+            return
+
+        command = "duck duck go"
+        command_length = len(command)
+        if(lowerCaseUserSpeech[0:command_length])==command: 
+            input = lowerCaseUserSpeech[command_length+1:]
+            open_browser_privacy(input)
+            return
         
         command = "youtube" 
         command_length = len(command)
         if(lowerCaseUserSpeech[0:command_length])==command: 
             input = lowerCaseUserSpeech[command_length+1:]
             open_youtube(input)
+            return
 
         command = "gmail" 
         command_length = len(command)
         if(lowerCaseUserSpeech[0:command_length])==command: 
             input = lowerCaseUserSpeech[command_length+1:]
             open_gmail(input)
+            return
         
         if(lowerCaseUserSpeech == "rickroll" or lowerCaseUserSpeech == "rick roll"):
             rick_roll()
+            return
         
         if(lowerCaseUserSpeech == "help"):
             help()
+            return
+
+        response = generate_response(lowerCaseUserSpeech + ". Keep your response 3-5 sentences long. Start a new line after 65 characters. Do not use fluff, Do not use asteriks, and put as much information as you can.")
+        print(response)
+        create_label(response)
+        textToSpeech(response)
 
         
   
 #GUI Buttons
     # Speak Button (used for Speech to Text)
     # Type Button (Gives alternative option to Type)
+    # Help Button (Lists abilities)
     # Exit Button (Terminates Program)
 ttk.Button(frm, text = "Speak", command = main).grid(column=0, row=0)
 ttk.Button(frm, text = "Draw", command = drawing_app).grid(column=0, row=1)
