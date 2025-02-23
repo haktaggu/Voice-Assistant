@@ -28,6 +28,3 @@ It also requires the packages:
 Also required:
  - Firefox (only supported browser as of this version)
  - GeckoDriver from the mozila repository (place in usr/local/bin and run)
-
-VA.py is the final version. Do not run main.py or VoiceAssistantV3.py. 
-
