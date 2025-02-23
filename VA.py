@@ -10,7 +10,7 @@ from tkinter import ttk
 import pygame
 import speech_recognition as sr
 import pyaudio as pa
-import time
+from datetime import datetime 
 import os
 import pyttsx3 
 from dotenv import load_dotenv, dotenv_values
@@ -25,9 +25,11 @@ root = Tk()
 frm = ttk.Frame(root, padding = 20)
 root.title("My Voice Assistant")
 #root.configure(bg="grey")
-root.geometry(f"500x400")
+root.geometry(f"425x500")
 frm.grid()
 
+
+current_time = datetime.now()
 #Pygame Frame
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 1000
